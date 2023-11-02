@@ -1,0 +1,35 @@
+i - row
+// индекс строки матрицы
+
+j - column
+// индекс столбца матрицы
+
+sd - sum_of_element_in_main_diagonal
+// сумма элементов на главной диагонали матрицы
+
+c - credentials
+// словарь элементов для входа
+
+get - get_data_of_process
+// метод получения даты события
+
+cc - clickhouse_client
+// инициализация клинента кликхауса
+
+pg - postgres_connection
+// подключение к базе данных
+
+rd - read_directory
+// метод чтения заданной директории
+
+cf - current_file
+// переменная текущего файла
+
+mg - message_from_person
+// сообщение, получаемое пользователем
+
+ev - environment_var
+// переменная окружения
+
+sm - send_message_vk
+// метод класса отправки сообщения
