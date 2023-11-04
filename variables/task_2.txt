@@ -1,0 +1,55 @@
+6.1
+
+coefficient - binom_coef
+// биномиальный коэффициент
+
+inp - input_string
+// строка для ввода
+
+sum - sum_of_coefficients
+// сумма коэффициентов квадратного уравнения
+
+a - square_coefs
+// старший коэффициент квадратного уравнения
+
+t_1, t_2 - t_min, t_max
+// минимальная и максимальная температуры
+
+
+6.2
+
+for key in f.keys():
+    ...
+// key - ключ в словаре
+
+rename_dict = {}
+...
+data.rename(rename_dict)
+// dict - словарь для переименовывания
+
+head, tail
+// начало и конец связанного списка или очереди
+
+index_tuple = (slice(None),) + (np.newaxis,) * (len(args) - 1)
+// tuple - кортеж
+
+
+6.3
+
+source_group, dest_group
+// группы записей во входном и выходном файлах hdf5
+
+figure_width, figure_height
+// размеры графика
+
+k_re, k_im
+// действительная и мнимая часть волнового числа
+
+
+6.4
+
+z - matrix_poly
+
+a - coef_columns
+
+s - singular_values
