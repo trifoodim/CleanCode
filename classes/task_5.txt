@@ -1,0 +1,44 @@
+3.1
+
+ExpBasis - ExpImagCollection
+// группа функций вида exp(ikx), Basis - это один из сценариев использования
+
+ParamsList - MaterialParams
+// список параметров материала, для которого решаются уравнения
+
+SystemParams - EquationCoefs
+// коэффициенты в уравнениях, которые мы решаем
+
+SphericalTensor - SphericalOperator
+// параметры оператора, который обладает сферической симметрией
+
+Model - Hamiltonian
+// более точная характеристика
+
+
+3.2
+
+ExpImagCollection:
+
+valuesAt - __call__
+// вычисление значений функций в заданной точке или на массиве точек
+
+left - domain_left
+right - domain_right
+// границы области определения
+
+l - domain_length
+// длина области определения
+
+SphericalOperator:
+
+ls - left_spin
+rs - right_spin
+// параметры спиновой части оператора
+
+ls - left_orbmom
+rs - right_orbmom
+// параметры орбитальной части оператора, "orbital_momentum" слишком длинное слово, тем более по сравнению со "spin"
+
+c - common_momentum
+// общий (common) момент импульса спиновой и орбитальной части
