@@ -1,3 +1,5 @@
+3.1
+
 KMesh1D.FromLinearSpace(coord, start, stop, num)
 // создание сетки в одномерном k-пространстве аналогично numpy.linspace
 
