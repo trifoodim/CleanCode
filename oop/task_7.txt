@@ -1,0 +1,8 @@
+KMesh1D.FromLinearSpace(coord, start, stop, num)
+// создание сетки в одномерном k-пространстве аналогично numpy.linspace
+
+KMesh1D.FromArray(coord, values)
+// создание сетки в одномерном k-пространстве из массива значений
+
+KMesh2D.FromProduct(mesh1, mesh2)
+// создание сетки в двумерном k-пространстве в виде декартова произведения одномерных сеток
