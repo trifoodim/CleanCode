@@ -1,0 +1,27 @@
+STATIC_VERSION - SITE_VERSION
+// это версия всего сайта, а не только "статических" файлов
+
+inProd - IS_ONLINE
+// заглавные буквы + отказ от жаргонных терминов
+
+N_MAX - NUM_COEFS
+// лучше отражает смысл константы и не привязано к математическим обозначениям
+
+dpi - SCREEN_DPI
+dpiSave - PRINT_DPI
+// заглавные буквы + больше смысла
+
+mm2inch - INCHES_PER_MM
+mm2point - POINTS_PER_MM
+// более точное название + заглавные буквы
+
+nrows - NUM_ROWS
+ncols - NUM_COLS
+// заглавные буквы и расшифровка префикса "n"
+
+width - WIDTH_MM
+height - HEIGHT_MM
+// заглавные буквы и единицы измерения
+
+path - PATH_FILE
+// заглавные буквы + более информативное имя
