@@ -1,0 +1,260 @@
+ 1 ============================================================================
+npow = self.npow + value.npow - 1
+result_shape = np.broadcast(self.coefs[0], value.coefs[0]).shape
+coefs = np.zeros((npow, *result_shape),
+    dtype=np.result_type(self.coefs, value.coefs))
+----------------------------------------
+npow = self.npow + value.npow - 1
+result_shape = np.broadcast(self.coefs[0], value.coefs[0]).shape
+result_type = np.result_type(self.coefs, value.coefs)
+coefs = np.zeros((npow, *result_shape), dtype=result_type)
+del npow, result_shape, result_type
+
+// в Python область видимости переменных нельзя ограничить блоками
+// поэтому их проще удалить после использования
+// заодно добавил ещё промежуточную переменную для улучшения читаемости кода
+
+
+ 2 ============================================================================
+n = 0
+for r in range(len(sourceParams)):
+    for c in range(len(sourceParams[r])):
+        n += 1
+        ...
+        pp.subplot(NUM_ROWS, NUM_COLS, n)
+----------------------------------------
+for r in range(len(sourceParams)):
+    for c in range(len(sourceParams[r])):
+        subplot_index = NUM_COLS * r + c
+        pp.subplot(NUM_ROWS, NUM_COLS, subplot_index)
+        del subplot_index
+        ...
+
+// вместо глобальной переменной теперь временная переменная с минимальной областью видимости
+
+
+ 3 ============================================================================
+for r in range(len(sourceParams)):
+    for c in range(len(sourceParams[r])):
+        ...
+        params = sourceParams[r][c]
+        ...
+----------------------------------------
+for r in range(len(sourceParams)):
+    for c in range(len(sourceParams[r])):
+        ...
+        params = sourceParams[r][c]
+        ...
+        del params
+
+// теперь область видимости params - часть внутреннего цикла
+
+
+ 4 ============================================================================
+dE = energies[1] - energies[0]
+energies = np.arange(energies[0], params.emax + dE/2, dE)
+...
+----------------------------------------
+dE = energies[1] - energies[0]
+energies = np.arange(energies[0], params.emax + dE/2, dE)
+del dE
+...
+
+// ограничил область видимости переменной dE
+
+
+ 5 ============================================================================
+detQ1 = np.zeros((len(xCd), len(energies)), dtype=complex)
+detQ1[:, :detQ.shape[1]] = detQ
+detQ1[:, detQ.shape[1]:] = detQ[:, -1:]
+detQ = detQ1
+...
+----------------------------------------
+detQ1 = np.zeros((len(xCd), len(energies)), dtype=complex)
+detQ1[:, :detQ.shape[1]] = detQ
+detQ1[:, detQ.shape[1]:] = detQ[:, -1:]
+detQ = detQ1
+del detQ1
+...
+
+// ограничил область видимости переменной detQ1
+
+
+ 6 ============================================================================
+x, y = np.meshgrid(xCd, energies)
+z = -np.log(np.abs(detQ)).T
+lo = np.min(z)
+up = np.max(z)
+levels = np.linspace(lo, lo + (up - lo) * 0.6, 256)
+pp.contourf(x, y, z, levels = levels, cmap = "Greys", extend = "both")
+----------------------------------------
+z = -np.log(np.abs(detQ)).T
+lo = np.min(z)
+up = np.max(z)
+levels = np.linspace(lo, lo + (up - lo) * 0.6, 256)
+del lo, up
+x, y = np.meshgrid(xCd, energies)
+pp.contourf(x, y, z, levels = levels, cmap = "Greys", extend = "both")
+del x, y, z
+
+// перегруппировал команды в соответствии с используемыми переменными
+// ограничил область видимости переменных
+
+
+ 7 ============================================================================
+...
+xCd, energies, eg, detQ = loadData(params)
+...
+----------------------------------------
+...
+
+xCd, energies, eg, detQ = loadData(params)
+...
+del xCd, energies, eg, detQ
+
+...
+
+// ограничил область видимости переменных и визуально выделил её с помощью пустых строк
+
+
+ 8 ============================================================================
+...
+t = pp.gca().xaxis.get_major_ticks()
+t[0].label.set_horizontalalignment("left")
+t[-1].label.set_horizontalalignment("right")
+...
+----------------------------------------
+...
+
+t = pp.gca().xaxis.get_major_ticks()
+t[0].label.set_horizontalalignment("left")
+t[-1].label.set_horizontalalignment("right")
+del t
+
+...
+
+// ограничил область видимости переменных и визуально выделил её с помощью пустых строк
+
+
+ 9 ============================================================================
+with open(source) as f:
+    f.readline()
+    f.readline()
+    data = np.loadtxt(f)
+
+w = data.reshape(6, 3, 4).transpose(1, 2, 0)
+
+...
+
+x, z, l = np.meshgrid(x, z, l, indexing="ij")
+energy = energyFunc(w, x, z, l)
+...
+----------------------------------------
+...
+
+x, z, l = np.meshgrid(x, z, l, indexing="ij")
+with open(source) as f:
+    f.readline()
+    f.readline()
+    w = np.loadtxt(f).reshape(6, 3, 4).transpose(1, 2, 0)
+energy = energyFunc(w, x, z, l)
+del w
+
+...
+
+// уменьшил область видимости переменной w и ограничил её с помощью команды del
+// избавился от временной переменной data
+
+
+10 ============================================================================
+e0 = 5
+de = 0.5
+whereE = np.abs(energy - e0) < de
+----------------------------------------
+e0 = 5
+de = 0.5
+whereE = np.abs(energy - e0) < de
+del energy, e0, de
+
+// ограничил область видимости временных переменных
+
+
+11 ============================================================================
+x, y = np.meshgrid(xcd, energies)
+z = np.log(1/np.abs(detQ))
+levels = np.linspace(np.min(z), np.max(z), 256)
+pp.contourf(x, y, z, levels = levels, cmap = "Greys")
+----------------------------------------
+x, y = np.meshgrid(xcd, energies)
+z = np.log(1/np.abs(detQ))
+levels = np.linspace(np.min(z), np.max(z), 256)
+pp.contourf(x, y, z, levels = levels, cmap = "Greys")
+del levels
+del x, y, z
+
+// ограничил область видимости временных переменных
+
+
+12 ============================================================================
+dp0 = np.zeros(pos.shape[:-1])
+dp1 = np.zeros(pos.shape[:-1])
+dp0[:, :, 1:] = np.abs(pos[:, :, 1:, -1] - pos[:, :, :-1, -1])
+dp1[:, :, 1:] = np.abs(pos[:, :, 1:, -2] - pos[:, :, :-1, -1])
+ishift = dp0 > dp1
+pos[ishift, -1] = pos[ishift, -2]
+----------------------------------------
+dp0 = np.zeros(pos.shape[:-1])
+dp1 = np.zeros(pos.shape[:-1])
+dp0[:, :, 1:] = np.abs(pos[:, :, 1:, -1] - pos[:, :, :-1, -1])
+dp1[:, :, 1:] = np.abs(pos[:, :, 1:, -2] - pos[:, :, :-1, -1])
+ishift = dp0 > dp1
+pos[ishift, -1] = pos[ishift, -2]
+del dp0, dp1, ishift
+
+// ограничил область видимости временных переменных
+
+
+13 ============================================================================
+lo = energies <= 0
+mi = np.logical_and(energies > 0, energies < model.eg)
+up = energies >= model.eg
+...
+# use lo, mi, up
+----------------------------------------
+...
+lo = energies <= 0
+mi = np.logical_and(energies > 0, energies < model.eg)
+up = energies >= model.eg
+# use lo, mi, up
+
+// уменьшил область видимости переменных
+
+
+14 ============================================================================
+class Hamiltonian:
+    ...
+
+def calc_ode_coefs(model, energy):
+    ...
+
+ode, odeV = calc_ode_coefs(model, energy)
+----------------------------------------
+class Hamiltonian:
+    ...
+
+    def calc_ode_coefs(self, energy):
+        ...
+
+ode, odeV = model.calc_ode_coefs(energy)
+
+// превратил глобальную функцию в метод класса
+
+
+15 ============================================================================
+def odeToD(ode):
+    ...
+----------------------------------------
+def _odeToD(ode):
+    ...
+
+// пометил функцию как локальную для данного модуля
