@@ -1,0 +1,137 @@
+ 1 ============================================================================
+energies = np.linspace(...)
+detQ = np.zeros(len(energies), dtype = complex)
+for i in range(len(energies)):
+    print("energy = {:6.2f}".format(energies[i]))
+    detQ[i] = some_functions(energies[i])
+----------------------------------------
+energies = np.linspace(...)
+detQ = []
+for energy in energies:
+    print(f"energy = {energy:6.2f}")
+    detQ.append(some_functions(energy))
+detQ = np.array(detQ)
+
+// последовательный доступ к массиву energies
+// список вместо второго массива
+// полный отказ от индексов
+
+
+ 2 ============================================================================
+column = 0
+exponent = 0
+while column < size:
+    for j in range(0, size - column):
+        ... # обработать текущий столбец матрицы (с индексом column)
+        expansion_coefs = ... # пробуем разложить этот столбец по предыдущим
+        is_lin_indep_columns = expansion_coefs is None
+        if is_lin_indep_columns:
+            ...
+            column += 1
+        else:
+            for m in range(0, column):
+                ...expansion_coefs[m]... # обработать столбцы до column
+            ... # циклический сдвиг всех столбцов, начиная с column
+    exponent += 1
+    ...
+----------------------------------------
+source_columns = [all_columns_of_matrix]
+dest_columns = []
+exponent = 0
+while len(source_columns) > 0:
+    for j in range(len(source_columns)):
+        current_column = source_columns.pop(0)
+        ... # обработать первый столбец из source_columns
+        expansion_coefs = ... # пробуем разложить этот столбец по предыдущим
+        is_lin_indep_columns = expansion_coefs is None
+        if is_lin_indep_columns:
+            ...
+            dest_columns.append(current_column)
+        else:
+            for coef, column in zip(expansion_coefs, dest_columns):
+                current_column -= coef * column
+            source_columns.append(current_column)
+    exponent += 1
+    ...
+
+// построение локальной нормальной формы Смита
+
+// два списка столбцов вместо одной матрицы
+// последовательный доступ к элементам сразу двух списков с помощью zip
+// вместо циклического сдвига просто добавляем столбец в конец source_columns
+
+
+ 3 ============================================================================
+dividend = ...
+divisor = ...
+quotient = []
+for i in reversed(range(len(dividend) - len(divisor) + 1)):
+    qc = dividend[i + value.npow - 1] / divisor[-1]
+    dividend[i : i + value.npow] -= qc * divisor
+    quotient.append(qc)
+    del qc
+----------------------------------------
+dividend = reversed(...)
+divisor = reversed(...)
+quotient = []
+dividend_head = dividend[:len(divisor)]
+dividend_tail = dividend[len(divisor):]
+while dividend_tail is not None:
+    qc = dividend_head.pop(0) / divisor[0]
+    dividend_head = [dd - qc * dr for dd, dr in zip(dividend_head, divisor[1:])]
+    quotient.append(qc)
+    del qc
+    if len(dividend_tail) == 0:
+        dividend_tail = None
+    else:
+        dividend_head.append(dividend_tail.pop(0))
+
+// деление многочленов
+
+// вместо сечений массивов работаем со списками коэффициентов
+// последовательный доступ к элементам сразу двух списков с помощью zip
+
+
+ 4 ============================================================================
+result = np.zeros((n,) + a.shape[1:] + b.shape[1:],
+    dtype = np.common_type(a, b))
+for i in range(n):
+    for ia in range(na):
+        for ib in range(nb):
+            ma = -ja + ia
+            mb = -jb + ib
+            m = -j + i
+            result[i] += np.multiply.outer(a[ia], b[ib]) \
+                * clebschGordan(j, m, ja, ma, jb, mb)
+----------------------------------------
+range_a = list(zip(a, np.arange(-ja, ja + 0.1)))
+range_b = list(zip(b, np.arange(-jb, jb + 0.1)))
+result = []
+for m in np.arange(-j, j + 0.1):
+    value = 0
+    for va, ma in range_a:
+        for vb, mb in range_b:
+            value = value + \
+                np.multiply.outer(va, vb) \
+                * clebschGordan(j, m, ja, ma, jb, mb)
+    result.append(value)
+    del value
+result = np.array(result)
+
+// списки вместо массивов
+// последовательный доступ к элементам сразу двух списков с помощью zip
+
+
+ 5 ============================================================================
+scatLeft1 = np.zeros(scat_shape, dtype=complex)
+scatLeft1[0] = np.eye(dim * 2)
+for i in range(len(trans)):
+    scatLeft1[i + 1] = \
+        scatmx.joinScatTrans(scatLeft1[i], trans1[i])
+----------------------------------------
+scatLeft1 = [np.eye(dim * 2)]
+for t in trans:
+    scatLeft1.append(scatmx.joinScatTrans(scatLeft1[-1], t))
+scatLeft1 = np.array(scatLeft1)
+
+// список вместо массива
