@@ -1,0 +1,113 @@
+3.1
+
+= 1 ===========================================================================
+# all missing derivatives in b are assumed to be zero
+for t in range(0, min(deriv + 1, len(b))):
+    ...
+
+
+= 2 ===========================================================================
+if len(b) > 0:
+    # calculate the t-th derivative of mxY @ b
+    # except the term with the t-th derivative of b
+    right_part += _derivMatMul(mxY, lj, b, deriv=t)
+----------------------------------------
+
+
+= 3 ===========================================================================
+# extend self.coefs if needed
+if value.npow > self.npow:
+    ...
+----------------------------------------
+
+
+= 4 ===========================================================================
+if x.ndim == 0:
+    # broadcast scalar polynomial over all dimensions of self
+    x = ArrayPoly(x.coefs[_it((), self.ndim)])
+----------------------------------------
+
+
+= 5 ===========================================================================
+# multiply by inverse diagonal part of local normal Smith form
+for column in range(size):
+    left_matrix[:, column] //= factor_powers[diag_factor_exponents[column]]
+----------------------------------------
+
+
+= 6 ===========================================================================
+# move rows and cols dimensions to the end
+# and reshape them to get plain square submatrices matrices
+head = [d for d in a.dims if d not in rows and d not in cols]
+headShape = tuple(a.sizes[d] for d in head)
+rowsShape = tuple(a.sizes[d] for d in rows)
+colsShape = tuple(a.sizes[d] for d in cols)
+dim = np.prod([a.sizes[d] for d in rows])
+# make sure the submatrices are square
+assert(np.prod([a.sizes[d] for d in cols]) == dim)
+aData = a \
+    .transpose(*head, *rows, *cols) \
+    .data \
+    .reshape(headShape + (dim, dim))
+----------------------------------------
+
+
+= 7 ===========================================================================
+# inverse the submatrices and then split their dimesions
+# finally reorder their dimensions to fit their order in the source array
+b = xr.DataArray(
+        np.linalg.inv(aData) \
+            .reshape(headShape + colsShape + rowsShape),
+        dims=(head + cols + rows)) \
+    .transpose(*a.dims)
+----------------------------------------
+
+
+3.2
+
+= 1 ===========================================================================
+enum dim = 8; // Hamiltonian dimension
+----------------------------------------
+enum hamiltonian_dim = 8;
+
+
+= 2 ===========================================================================
+string fnameOutBS = ""; // Band structure
+string fnameOutCD = ""; // Charge density
+----------------------------------------
+string band_struct_output = "";
+string charge_dens_output = "";
+
+
+= 3 ===========================================================================
+double n = 1e+11*1e-16; // total carrier concentration (A^-2)
+----------------------------------------
+double conc_e_2d_angs = 1e+11*1e-16;
+
+
+= 4 ===========================================================================
+// Energy unit
+E0 = CGS_me * CGS_e^^4 / (kapa^^2 * CGS_hbar^^2 * 2 * kane_g1(T)) / CGS_meV;
+// Length unit
+L0 = CGS_hbar^^2 * kapa / (CGS_e^^2 * CGS_me) * kane_g1(T) / CGS_Angstrom;
+----------------------------------------
+energy_unit_erg = CGS_me * CGS_e^^4 / (kapa^^2 * CGS_hbar^^2 * 2 * kane_g1(T)) / CGS_meV;
+length_unit_cm = CGS_hbar^^2 * kapa / (CGS_e^^2 * CGS_me) * kane_g1(T) / CGS_Angstrom;
+
+
+= 5 ===========================================================================
+double v1 = basis.vmin; // The beginning of current layer
+foreach(layer; layers)
+{
+    double v2 = v1 + layer.thickness; // The end of current layer
+    ...
+    v1 = v2; // Where curent layer ends the next starts
+}
+----------------------------------------
+double layer_start = basis.vmin;
+foreach(layer; layers)
+{
+    double layer_end = layer_start + layer.thickness;
+    ...
+    layer_start = layer_end;
+}
