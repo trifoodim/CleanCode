@@ -1,0 +1,116 @@
+==1=========================================================================
+# extend energy mesh up to emax
+dE = energies[1] - energies[0]
+energies = np.arange(energies[0], params.emax + dE/2, dE)
+del dE
+----------------------------------------
+// 1. Информативный комментаний
+
+
+==2=========================================================================
+# set detQ value for the additional energies
+# equal to the last known value
+detQ1 = np.zeros((len(xCd), len(energies)), dtype=complex)
+detQ1[:, :detQ.shape[1]] = detQ
+detQ1[:, detQ.shape[1]:] = detQ[:, -1:]
+detQ = detQ1
+del detQ1
+----------------------------------------
+// 1. Информативный комментаний
+
+
+==3=========================================================================
+# calculate Hamiltonian matrix as matrix polynomial wrt k
+hk = ap.ArrayPoly([
+    h[..., 0, 0],
+    h[..., 0, 1] + h[..., 0, 2] + h[..., 1, 0] + h[..., 2, 0],
+    h[..., 1, 1] + h[..., 1, 2] + h[..., 2, 1] + h[..., 2, 2],
+])
+----------------------------------------
+// 1. Информативный комментаний
+
+
+==4=========================================================================
+for key in f.keys():
+    s = f[key]
+    # the first energies value will be used also for all other entries
+    if energies is None:
+        energies = s["energies"][:]
+----------------------------------------
+// 2. Представление намерений
+
+
+==5=========================================================================
+if key in f:
+    print("exists", key)
+    # calculation will be made only for missing energy values
+    ...
+----------------------------------------
+// 2. Представление намерений
+
+
+==6=========================================================================
+# solve equation forward for b-functions and backward for a-functions
+# to let the instability produce exponents growing in proper directions
+meshB = xr.DataArray(mesh, dims="t")
+meshA = _reverseDim(meshB, "t")
+y = xr.concat([
+        ode.polySolve(odeMx, y0, meshA, origins1, pp),
+        ode.polySolve(odeMx, y0, meshB, origins1, pp)],
+    dim="dir").assign_coords({"dir": ["a", "b"]})
+y.loc[{"dir": "a"}] = _reverseDim(y.loc[{"dir": "a"}], "t")
+----------------------------------------
+// 2. Представление намерений
+
+
+==7=========================================================================
+# Don't remove lambda_roots parameter
+# automatic root calculation is not precise enough for this test
+s = solve(mxA, min_terms=4, lambda_roots=[2, 3])
+----------------------------------------
+// 4. Предупреждения о последствиях
+
+
+==8=========================================================================
+for s in range(self.npow):
+    # be careful with vectorization of the internal loop
+    # as it can break broadcasting in case of value.ndims=0
+    for v in range(value.npow):
+        coefs[s + v] += self.coefs[s] * value.coefs[v]
+----------------------------------------
+// 4. Предупреждения о последствиях
+
+
+==9=========================================================================
+# subsequent // and % operations is essential part of the algorithm
+# we extract the terms with specific power of factor
+remainder_matrix[:, column : column + 1] = \
+    a @ inv_right_matrix[:, column : column + 1] // factor_powers[exponent] % factor
+----------------------------------------
+// 5. Усиление
+
+
+==10=========================================================================
+# TODO - move calculation of ct to separate function
+ct = []
+for k in range(kernelSize):
+    ...
+----------------------------------------
+6. Комментарии TODO
+
+
+==11=========================================================================
+# TODO - move calculation of g to separate function
+g = []
+for k in range(kernelSize):
+    ...
+----------------------------------------
+6. Комментарии TODO
+
+
+==12=========================================================================
+class TestArithmetic(unittest.TestCase):
+    # TODO add tests for polynomials with ndims=0 and npows=0
+    ...
+----------------------------------------
+// 6. Комментарии TODO
