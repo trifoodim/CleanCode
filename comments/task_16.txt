@@ -1,0 +1,240 @@
+==  1 =========================================================================
+def __pos__(self):
+    """Unary plus
+    """
+    return self
+----------------------------------------
+def __pos__(self):
+    return self
+
+// 10. Обязательный комментарий.
+// Удалил его, так как стандартное название метода говорит само за себя
+
+
+==  2 =========================================================================
+def __neg__(self):
+    """Unary neg
+    """
+    return ArrayPoly(-self.coefs)
+----------------------------------------
+def __neg__(self):
+    return ArrayPoly(-self.coefs)
+
+// 10. Обязательный комментарий.
+// Удалил его, так как стандартное название метода говорит само за себя
+
+
+==  3 =========================================================================
+#de = 0.02
+#de = 0.04
+de = 0.05
+#de = 1
+energies_meV = np.linspace(de, args.emax, int(args.emax / de + 0.1))
+----------------------------------------
+ENERGY_STEP = 0.05
+...
+energies_meV = np.linspace(ENERGY_STEP, args.emax, int(args.emax / ENERGY_STEP + 0.1))
+
+// 11. Закомментированный код
+// Заменил переменную на константу и удалил весь закомментированный код
+
+
+==  4 =========================================================================
+def run(cmd):
+    print(cmd)
+    #return None
+    ...
+----------------------------------------
+def run(cmd):
+    print(cmd)
+    ...
+
+// 11. Закомментированный код
+// Удалил его
+
+
+==  5 =========================================================================
+#for x in np.linspace(0, 0.3, 300 + 1):
+#for x in np.linspace(0, 0.3, 150 + 1):
+for x in np.linspace(0, 0.3, 60 + 1):
+#for x in np.linspace(0, 0.3, 3 + 1):
+    ...
+----------------------------------------
+X_MAX = 0.3
+X_STEP = 0.005
+...
+for x in np.linspace(0, X_MAX, int(X_MAX / X_STEP + 0.1) + 1):
+    ...
+
+// 11. Закомментированный код
+// Удалил его и использовал константы вместо магических чисел
+
+
+==  6 =========================================================================
+# multiply by inverse diagonal part of local normal Smith form
+for column in range(size):
+    left_matrix[:, column] //= factor_powers[diag_factor_exponents[column]]
+----------------------------------------
+diagonal = [factor_powers[e] for e in diag_factor_exponents]
+left_matrix = _divide_by_diagonal(left_matrix, diagonal)
+
+// 12. Можно использовать функцию или переменную
+// Использовал функцию и переменную
+
+
+==  7 =========================================================================
+# extend self.coefs if needed
+if value.npow > self.npow:
+    coefs = np.zeros((value.npow, *self.shape), dtype=self.coefs.dtype)
+    coefs[:self.npow] = self.coefs
+    self.coefs = coefs
+----------------------------------------
+self.__extend_coefs_to_npow(value.npow)
+
+// 12. Можно использовать функцию или переменную
+// Использовал функцию
+
+
+==  8 =========================================================================
+if x.ndim == 0:
+    # broadcast scalar polynomial over all dimensions of self
+    x = ArrayPoly(x.coefs[_it((), self.ndim)])
+----------------------------------------
+if x.ndim == 0:
+    x = self.__broadcast_0d(x)
+
+// 12. Можно использовать функцию или переменную
+// Использовал функцию
+
+
+==  9 =========================================================================
+for s in range(self.npow):
+    # be careful with vectorization of the internal loop
+    # as it can break broadcasting in case of value.ndims=0
+    for v in range(value.npow):
+        coefs[s + v] += self.coefs[s] * value.coefs[v]
+----------------------------------------
+if value.ndim == 0:
+    value = self.__broadcast_0d(value)
+...
+for s in range(self.npow):
+    coefs[s : s + value.npow] += self.coefs[s : s + 1] * value.coefs
+
+// 2. Бормотание
+// Лучше написать нормально, чем долго объяснять костыль в комментариях
+
+
+== 10 =========================================================================
+# subsequent // and % operations is essential part of the algorithm
+# we extract the terms with specific power of factor
+remainder_matrix[:, column : column + 1] = \
+    a @ inv_right_matrix[:, column : column + 1] // factor_powers[exponent] % factor
+----------------------------------------
+higher_power_column = a @ inv_right_matrix[:, column : column + 1] // factor_powers[exponent]
+exact_power_matrix[:, column : column + 1] = higher_power_column % factor
+
+// 12. Можно использовать функцию или переменную
+// Передал смысл операции через имена переменных
+
+
+== 11 =========================================================================
+# calculate the t-th derivative of mxY @ b
+# except the term with the t-th derivative of b
+right_part += _derivMatMul(mxY, lj, b, deriv=t)
+----------------------------------------
+b_deriv_without_last_term = _derivMatMul(mxY, lj, b, deriv=t)
+right_part += b_deriv_without_last_term
+
+// 12. Можно использовать функцию или переменную
+// Использовал переменную
+
+
+== 12 =========================================================================
+# all missing derivatives in b are assumed to be zero
+for t in range(0, min(deriv + 1, len(b))):
+    ...
+----------------------------------------
+num_nonzero_terms = min(deriv + 1, len(b))
+for t in range(num_nonzero_terms):
+    ...
+
+// 12. Можно использовать функцию или переменную
+// Использовал переменную
+
+
+== 13 =========================================================================
+mxA = np.array([
+    [ # d^0
+        [[-72]], # x^0
+    ],
+    [ # d^1
+        [[156]], # x^0
+    ],
+    [ # d^2
+        [[-134]], # x^0
+    ],
+    [ # d^3
+        [[57]], # x^0
+    ],
+    [ # d^4
+        [[-12]], # x^0
+    ],
+    [ # d^5
+        [[1]], # x^0
+    ],
+])
+----------------------------------------
+mxA = np.array([-72, 156, -134, 57, -12, 1]).reshape(-1, 1, 1, 1)
+
+// 4. Шум
+// Убрал комментаии и упростил конструкцию
+
+
+== 14 =========================================================================
+mxA = np.array([
+    [ # d^0
+        [[0]], # x^0
+        [[0]], # x^1
+        [[a * b]], # x^2
+    ],
+    [ # d^1
+        [[-1]], # x^0
+        [[-(a + b)]], # x^1
+        [[0]], # x^2
+    ],
+    [ # d^2
+        [[1]], # x^0
+        [[0]], # x^1
+        [[0]], # x^2
+    ],
+])
+----------------------------------------
+mxA = np.array([
+    [0, 0, a * b],
+    [-1, -(a + b), 0],
+    [1, 0, 0],
+]).reshape(3, 3, 1, 1)
+
+// 4. Шум
+// Убрал комментаии и упростил конструкцию
+
+
+== 15 =========================================================================
+mxA = np.array([
+    [ # d^0
+        [[0]], # x^0
+        [[-a]], # x^1
+    ],
+    [ # d^1
+        [[1]], # x^0
+        [[0]], # x^1
+    ],
+])
+----------------------------------------
+mxA = np.array([
+    [0, -a],
+    [1, 0],
+]).reshape(2, 2, 1, 1)
+
+// 4. Шум
+// Убрал комментаии и упростил конструкцию
